@@ -2,25 +2,33 @@ module FiberRecycling
   class Fiber
   
     def self.current
-      Thread.current[:recycled_fiber]
+      Thread.current[:fiber_recycling__fiber] || root
+    end
+    
+    def self.root
+      unless Thread.current.thread_variable_get(:fiber_recycling__root_fiber)
+        Thread.current.thread_variable_set(:fiber_recycling__root_fiber, new(RootFiberBackend.new))
+      end
+      Thread.current.thread_variable_get(:fiber_recycling__root_fiber)
     end
     
     def self.yield(*args)
-      @state = 'suspended'
-      return_value = RecycledFiber.yield(*args)
-      @state = 'resumed'
-      return_value
+      current.backend.class.yield(*args)
     end
     
-    def initialize(&block)
-      raise ArgumentError, 'must pass a block' unless block_given?
-      @state = 'created'
-      @recycled_fiber = RecycledFiberPool.local.release_recycled_fiber
-      @recycled_fiber.run { execute(block) }
+    attr_reader :backend
+    
+    def initialize(backend = nil, &block)
+      if backend && backend.is_a?(FiberBackend)
+        @backend = backend
+      else
+        raise ArgumentError, 'must pass a block' unless block_given?
+        @backend = NormalFiberBackend.new(self, block)
+      end
     end
     
     def alive?
-      @state != 'terminated'
+      @backend.alive?
     end
     
     def inspect
@@ -28,29 +36,15 @@ module FiberRecycling
     end
     
     def resume(*args)
-      raise FiberError, 'dead fiber called' unless alive?
-      @recycled_fiber.resume(*args)
+      @backend.resume(*args)
     end
     
     def to_s
-      "#<RecycledFiber::Fiber:#{object_hexid} (#{@state})>"
+      @backend.to_s
     end
     
     def transfer(*args)
-      raise FiberError, 'dead fiber called' unless alive?
-      @recycled_fiber.transfer(*args)
-    end
-    
-    private
-    
-    def execute(block)
-      args = RecycledFiber.yield
-      Thread.current[:recycled_fiber] = self
-      return_value = block.call(*args)
-      Thread.current[:recycled_fiber] = nil
-      @state = 'terminated'
-      RecycledFiberPool.local.absorb_recycled_fiber(@recycled_fiber)
-      return_value
+      @backend.transfer(*args)
     end
     
   end

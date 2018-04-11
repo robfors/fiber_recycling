@@ -2,10 +2,10 @@ module FiberRecycling
   class RecycledFiberPool < QuackPool
     
     def self.local
-      unless Thread.current.thread_variable_get(:recycled_fiber_pool)
-        Thread.current.thread_variable_set(:recycled_fiber_pool, new)
+      unless Thread.current.thread_variable_get(:fiber_recycling__recycled_fiber_pool)
+        Thread.current.thread_variable_set(:fiber_recycling__recycled_fiber_pool, new)
       end
-      Thread.current.thread_variable_get(:recycled_fiber_pool)
+      Thread.current.thread_variable_get(:fiber_recycling__recycled_fiber_pool)
     end
     
     def initialize
