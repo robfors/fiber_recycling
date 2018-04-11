@@ -6,15 +6,15 @@ module FiberRecycling
     end
     
     def alive?
-      NativeFiber.root.alive?
+      ::Fiber.root.alive?
     end
     
     def inspect
-      NativeFiber.root.inspect
+      ::Fiber.root.inspect
     end
     
     def resume(*args)
-      NativeFiber.root.resume(*args)
+      ::Fiber.root.resume(*args)
     end
     
     def to_s
@@ -22,7 +22,7 @@ module FiberRecycling
     end
     
     def transfer(*args)
-      NativeFiber.root.transfer(*args)
+      ::Fiber.root.transfer(*args)
     end
     
   end

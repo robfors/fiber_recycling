@@ -13,7 +13,4 @@ require 'fiber_recycling/recycled_fiber_pool'
 require 'fiber_recycling/root_fiber_backend'
 
 module FiberRecycling
-
-  NativeFiber = ::Fiber
-
 end

@@ -2,11 +2,11 @@ module FiberRecycling
   class RecycledFiber
   
     def self.yield(*args)
-      NativeFiber.yield(*args)
+      ::Fiber.yield(*args)
     end
     
     def initialize
-      @native_fiber = NativeFiber.new { execution_loop }
+      @native_fiber = ::Fiber.new { execution_loop }
       @state = :initialized
       start
     end
@@ -29,12 +29,12 @@ module FiberRecycling
       last_reutrn_value = nil
       loop do
         @state = :waiting_for_instruction
-        instruction = NativeFiber.yield(last_reutrn_value)
+        instruction = ::Fiber.yield(last_reutrn_value)
         case instruction
         when :run
           @state = :executing_block
-          args = NativeFiber.yield
-          proc = NativeFiber.yield
+          args = ::Fiber.yield
+          proc = ::Fiber.yield
           last_reutrn_value = proc.call(*args)
         when :close
           @state = :closed
