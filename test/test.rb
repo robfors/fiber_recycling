@@ -20,8 +20,7 @@ require_relative "../lib/fiber_recycling.rb"
 
 
 fiber = FiberRecycling::Fiber.new do |first|
-binding.pry
-  second = FiberRecycling::Fiber.yield(first) + 2
+  second = FiberRecycling::Fiber.yield first + 2
 end
 
 puts fiber.resume 10

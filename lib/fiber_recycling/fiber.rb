@@ -7,8 +7,9 @@ module FiberRecycling
     
     def self.yield(*args)
       @state = 'suspended'
-      RecycledFiber.yield(*args)
+      return_value = RecycledFiber.yield(*args)
       @state = 'resumed'
+      return_value
     end
     
     def initialize(&block)
