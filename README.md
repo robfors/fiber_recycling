@@ -1,5 +1,5 @@
 # FiberRecycling
-This Ruby Gem offers a ducktype for `Fiber` that will reuse old native fibers for a small performance gain. It will work as a drop in replacment for Ruby's natve `Fiber`.
+This Ruby Gem offers a duck type for `Fiber` that will reuse old native fibers for a small performance gain. It will work as a drop in replacment for Ruby's natve `Fiber`, offering a small performance gain.
 
 # Install
 `gem install fiber_recycling`
