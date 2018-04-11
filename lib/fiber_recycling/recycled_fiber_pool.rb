@@ -1,4 +1,4 @@
-module RecycledFiber
+module FiberRecycling
   class RecycledFiberPool < QuackPool
     
     def self.local

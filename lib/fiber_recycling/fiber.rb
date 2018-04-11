@@ -1,4 +1,4 @@
-module RecycledFiber
+module FiberRecycling
   class Fiber
   
     def self.current

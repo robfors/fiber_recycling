@@ -1,4 +1,4 @@
-module RecycledFiber
+module FiberRecycling
   class RecycledFiber
   
     def self.yield(*args)
