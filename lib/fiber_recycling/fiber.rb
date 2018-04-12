@@ -12,6 +12,10 @@ module FiberRecycling
       Thread.current.thread_variable_get(:fiber_recycling__root_fiber)
     end
     
+    def self.root?
+      current == root
+    end
+    
     def self.yield(*args)
       current.backend.class.yield(*args)
     end
@@ -45,6 +49,10 @@ module FiberRecycling
     
     def transfer(*args)
       @backend.transfer(*args)
+    end
+    
+    def variables
+      @backend.variables
     end
     
   end

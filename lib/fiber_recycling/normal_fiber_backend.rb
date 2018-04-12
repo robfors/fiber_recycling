@@ -8,8 +8,11 @@ module FiberRecycling
       return_value
     end
     
+    attr_reader :variables
+    
     def initialize(fiber, block)
       @state = 'created'
+      @variables = {}
       @recycled_fiber = RecycledFiberPool.local.release_recycled_fiber
       @recycled_fiber.run { execute(fiber, block) }
     end

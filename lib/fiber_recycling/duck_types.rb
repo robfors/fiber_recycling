@@ -3,6 +3,6 @@ module FiberRecycling
   
     Fiber = Fiber
     FiberError = FiberError
-  
+    
   end
 end

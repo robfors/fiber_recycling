@@ -5,6 +5,12 @@ module FiberRecycling
       raise FiberError, "can't yield from root fiber"
     end
     
+    attr_reader :variables
+    
+    def initialize
+      @variables = {}
+    end
+    
     def alive?
       ::Fiber.root.alive?
     end
