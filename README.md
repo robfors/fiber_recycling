@@ -43,7 +43,7 @@ module A
     fiber # => FiberRecycling::Fiber
     fiber.resume # => nil
     fiber.resume # => nil
-    fiber.resume # => FiberRecycling::FiberError, dead fiber resumed
+    fiber.resume # => FiberRecycling::FiberError, dead fiber called
   end
   
 end
