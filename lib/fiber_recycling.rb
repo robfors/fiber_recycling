@@ -12,7 +12,8 @@ require 'fiber_recycling/recycled_fiber'
 require 'fiber_recycling/recycled_fiber_pool'
 require 'fiber_recycling/root_fiber_backend'
 require 'fiber_recycling/thread_extensions'
-require_relative 'thread'
+require 'fiber_recycling/monkey_patches/thread'
+
 
 module FiberRecycling
 end
