@@ -1,6 +1,10 @@
 module FiberRecycling
   class NormalFiberBackend < FiberBackend
   
+    def self.finalizer(recycled_fiber_borrower)
+      Proc.new { recycled_fiber_borrower.return }
+    end
+    
     def self.yield(*args)
       @state = 'suspended'
       return_value = RecycledFiber.yield(*args)
@@ -13,8 +17,10 @@ module FiberRecycling
     def initialize(fiber, block)
       @state = 'created'
       @variables = {}
-      @recycled_fiber = RecycledFiberPool.local.release_recycled_fiber
+      @recycled_fiber_borrower =  RecycledFiberPool.local.borrower
+      @recycled_fiber = @recycled_fiber_borrower.retrieve
       @recycled_fiber.run { execute(fiber, block) }
+      ObjectSpace.define_finalizer(self, self.class.finalizer(@recycled_fiber_borrower))
     end
     
     def alive?
@@ -47,7 +53,8 @@ module FiberRecycling
       return_value = block.call(*args)
       Thread.current[:fiber_recycling__fiber] = nil
       @state = 'terminated'
-      RecycledFiberPool.local.absorb_recycled_fiber(@recycled_fiber)
+      @recycled_fiber = nil
+      @recycled_fiber_borrower.return
       return_value
     end
     

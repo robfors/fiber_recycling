@@ -12,12 +12,16 @@ module FiberRecycling
       super(resource_class: RecycledFiber)
     end
     
-    def release_recycled_fiber
-      release_resource
-    end
-    
     def absorb_recycled_fiber(recycled_fiber)
       absorb_resource(recycled_fiber)
+    end
+    
+    def borrower
+      RecycledFiberPoolBorrower.new(self)
+    end
+    
+    def release_recycled_fiber
+      release_resource
     end
   
   end
